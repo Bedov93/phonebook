@@ -1,7 +1,7 @@
 <?php
 return array(
     'db' => array(
-        'host' => 'mysql',
+        'host' => 'db',
         'name' => 'phonebook',
         'user' => 'root',
         'password' => '123456'
