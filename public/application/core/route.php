@@ -59,6 +59,7 @@ class Route
             $data['controller'] = 'Controller_'.$controller_data[0];
             $data['action'] = 'action_'.$controller_data[1];
         }else if(!empty($uri[1]) && empty($uri[2])){
+            $uri[1] = explode("?", $uri[1])[0];
             if(!isset($this->_routes[$uri[1]])) {;
                 Route::ErrorPage404();
             }
@@ -73,6 +74,7 @@ class Route
                 $data['action'] = $uri[2];
             }
         }
+
         return $data ? $data : Route::ErrorPage404();
     }
 

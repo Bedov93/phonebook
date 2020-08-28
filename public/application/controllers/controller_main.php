@@ -34,7 +34,7 @@ class Controller_Main extends Controller
                     ]);
             }
 
-            if(!$this->model->login($_POST)) {
+            if (!$this->model->login($_POST)) {
                 $this->view->generate('',
                     'main_login.php',
                     [
@@ -89,5 +89,29 @@ class Controller_Main extends Controller
     function action_captcha()
     {
         captcha();
+    }
+
+    function action_test()
+    {
+
+        $faker = Faker\Factory::create();
+        for ($i = 1; $i <= 100; $i++) {
+            $contacts[] = [
+                $i,
+                "<img src='{$faker->imageUrl(80, 80)}'>",
+                $faker->firstName,
+                $faker->lastName,
+                $faker->unique()->safeEmail,
+                $faker->e164PhoneNumber,
+                ""
+            ];
+        }
+        $data = [
+            "draw" => 1,
+            "recordsTotal" => 57,
+            "recordsFiltered" => 57,
+            "data" => $contacts
+        ];
+        echo json_encode($data);
     }
 }

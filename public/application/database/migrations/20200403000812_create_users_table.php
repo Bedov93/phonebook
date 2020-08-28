@@ -10,7 +10,8 @@ class CreateUsersTable extends AbstractMigration
               ->addColumn('login', 'string', ['limit' => 255])
               ->addColumn('password', 'string', ['limit' => 60])
               ->addColumn('email', 'string', ['limit' => 255])
-              ->addColumn('is_admin', 'boolean')
+              ->addColumn('is_admin', 'boolean',['default' => 0])
+              ->addTimestamps()
               ->create();
     }
 

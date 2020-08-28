@@ -15,6 +15,8 @@ require_once _CORE_.'functions.php';
  * @param $class class name for load
  */
 spl_autoload_register(function ($class){
+    require_once 'vendor/autoload.php';
+
     $class = strtolower($class).'.php';
     /*Если модель*/
     if(file_exists(_MODELS_.$class)){
