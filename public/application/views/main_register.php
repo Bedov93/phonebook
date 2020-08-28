@@ -65,8 +65,7 @@
         <div class="form-group">
             <input type="text" name="password" class="form-control
             <?= isset($errors['password']) ? 'is-invalid': '' ?>"
-                   placeholder="Password" required="required"
-                   value="<?= isset($oldValue['password']) ? trim($oldValue['password']) : ''?>">
+                   placeholder="Password" required="required">
             <?php if(isset($errors['password'])) : ?>
                 <small id="passwordlHelp" class="text-danger">
                     <?= $errors['password'] ?>

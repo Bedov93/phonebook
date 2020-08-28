@@ -41,12 +41,11 @@ class Model_User extends Model
             $this->errors['captcha'] = 'The captcha is wrong';
         }
 
-        if(isset($input['login']))
-        {
+        if (isset($input['login'])) {
             $this->checkLoginExists($post['login']);
         }
 
-        if(isset($input['email'])) {
+        if (isset($input['email'])) {
             $this->checkEmailExists($post['email']);
         }
 
@@ -78,11 +77,35 @@ class Model_User extends Model
 
     public function createUser($data)
     {
+        $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+
         Database::query("
             INSERT INTO 
                 users (login, password, email, is_admin)
                 VALUES (:login, :password, :email, 0)
              
         ", $data);
+    }
+
+    public function login($data)
+    {
+        session_start();
+        $params = [
+            'login' => $data['login'],
+        ];
+
+        $password = Database::query(
+            'SELECT password FROM users WHERE login = :login',
+            $params)->fetch(PDO::FETCH_ASSOC)['password'];
+
+        if (!$password || !password_verify($data['password'], $password)) {
+            return false;
+        }
+
+        session_start();
+        $_SESSION['logged'] = true;
+        $_SESSION['login'] = $data['login'];
+
+        return true;
     }
 }
