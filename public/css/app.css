@@ -249,3 +249,10 @@ table.table .avatar {
     font-weight: normal;
 }
 
+#phone_text {
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    background: #dddddd;
+    padding: 10px;
+}

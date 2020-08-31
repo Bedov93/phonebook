@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
-
     <link rel="stylesheet" href="/css/app.css?v=<?= time() ?>">
 </head>
 
@@ -31,7 +30,7 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                aria-haspopup="true" aria-expanded="false">
-                <strong>Account</strong>
+                <strong><?= $_SESSION['login']?></strong>
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                 <a href="/logout" class="dropdown-item">
@@ -60,69 +59,40 @@
     </div>
 </div>
 <!-- Edit Modal HTML -->
-<div id="addEmployeeModal" class="modal fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form>
-                <div class="modal-header">
-                    <h4 class="modal-title">Add Employee</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Address</label>
-                        <textarea class="form-control" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Phone</label>
-                        <input type="text" class="form-control" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                    <input type="submit" class="btn btn-success" value="Add">
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<!-- Edit Modal HTML -->
 <div id="editEmployeeModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form>
+            <form id="editEmployeeModalForm">
                 <div class="modal-header">
-                    <h4 class="modal-title">Edit Employee</h4>
+                    <h4 class="modal-title">Add Contact</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 </div>
                 <div class="modal-body">
+                    <input type="hidden" id="id">
+                    <input type="hidden" id="action">
                     <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" class="form-control" required>
+                        <label>First Name</label>
+                        <input type="text" class="form-control" required name="first_name" id="first_name">
                     </div>
                     <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" class="form-control" required>
+                        <label>Last Name</label>
+                        <input type="text" class="form-control" required name="last_name" id="last_name">
                     </div>
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="email" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Address</label>
-                        <textarea class="form-control" required></textarea>
+                        <input type="email" class="form-control" required name="email" id="email">
                     </div>
                     <div class="form-group">
                         <label>Phone</label>
-                        <input type="text" class="form-control" required>
+                        <input type="text" class="form-control" required name="phone" id="phone">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Text</label>
+                        <div id="phone_text"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Photo</label>
+                        <input id="photo" type="file" class="form-control" name="photo" onchange="fileValidate(this.value);">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -130,25 +100,6 @@
                     <input type="submit" class="btn btn-info" value="Save">
                 </div>
             </form>
-        </div>
-    </div>
-</div>
-<!-- Delete Modal HTML -->
-<div id="deleteEmployeeModal" class="modal fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Delete Contact</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete these Records?</p>
-                <p class="text-warning"><small>This action cannot be undone.</small></p>
-            </div>
-            <div class="modal-footer">
-                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                <input id="btnDelete" type="button" class="btn btn-danger" value="Delete">
-            </div>
         </div>
     </div>
 </div>
@@ -165,64 +116,9 @@
 <script src="https://cdn.datatables.net/buttons/1.6.3/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
 <script src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.min.js"></script>
-<script>
-    $(document).ready(function () {
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
-        var table = $('#example').DataTable({
-            responsive: true,
-            processing: true,
-            serverSide: true,
-            ajax: "/contacts",
-            columns: [
-                {data: 'id', searchable: false},
-                {data: 'photo', searchable: false, orderable: false},
-                {data: 'first_name'},
-                {data: 'last_name'},
-                {data: 'email'},
-                {data: 'phone'},
-                {data: null, orderable: false}
-            ],
-            columnDefs: [
-                {
-                    targets: 1,
-                    render: function (data, type, full, meta) {
-                        return '<img src="'+data+'">'
-                    }
-                },
-                {
-                    targets: -1,
-                    render: function (data, type, full, meta) {
-                        return '' +
-                            '<a href="#" data-id="'+full.id+'" class="edit" style="color: #FFC107">' +
-                                '<i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>' +
-                            '</a>' +
-                            '<a href="#" data-id="'+full.id+'" class="delete"  style="color:#F44336">' +
-                                '<i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>' +
-                            '</a>';
-                    }
-                }
-            ],
-            order: [[0, 'DESC']]
-        });
-
-        $(document).on('click', '.delete', function () {
-            var id = $(this).data("id");
-            if (confirm("Are you sure you want to delete this?")) {
-                $.ajax({
-                    url: "contacts-delete",
-                    method: "POST",
-                    data: {id: id},
-                    success: function (data) {
-
-                        table.ajax.reload();
-                    }
-                });
-            } else {
-                return false;
-            }
-        });
-    });
-</script>
+<script src="js/app.js"></script>
 
 </body>
 

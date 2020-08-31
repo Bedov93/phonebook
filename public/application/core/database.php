@@ -73,13 +73,18 @@ class Database
     public static function row($sql, $params = [])
     {
         $result = self::getInstance()->query($sql, $params);
-        return $result->fetchAll(PDO::FETCH_ASSOC);
+        return $result->fetch(PDO::FETCH_ASSOC);
     }
 
     public static function column($sql, $params = [])
     {
         $result = self::getInstance()->query($sql, $params);
         return $result->fetchColumn();
+    }
+
+    public static function execute($sql, $params = [])
+    {
+        return self::getInstance()->query($sql, $params)->execute();
     }
 
     public static function lastInsertId()
