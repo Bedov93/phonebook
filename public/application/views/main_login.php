@@ -57,7 +57,9 @@
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-block">Login</button>
         </div>
-
+        <div class="form-group">
+            <a href="/register">Register</a>
+        </div>
     </form>
 </div>
 <script

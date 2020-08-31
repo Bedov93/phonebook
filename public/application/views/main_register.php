@@ -86,7 +86,9 @@
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-block" onclick="return auth(this.form);">Register</button>
         </div>
-
+        <div class="form-group">
+            <a href="/login">Login</a>
+        </div>
     </form>
 </div>
 <script
