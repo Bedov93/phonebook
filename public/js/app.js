@@ -15,6 +15,24 @@ $(document).ready(function () {
         processing: true,
         serverSide: true,
         ajax: "/contacts",
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                text: 'Add',
+                className: 'btn btn-success',
+                action: function ( e, dt, node, config ) {
+                    $('#createContactModal .modal-title').text('Create Contact');
+                    $('#createContactModal #first_name').val("");
+                    $('#createContactModal #last_name').val("");
+                    $('#createContactModal #email').val("");
+                    $('#createContactModal #phone').val("");
+                    $("#createContactModal #phone").mask("+ (999) 999 999 9999");
+                    $('#createContactModal #phone_text').text("");
+                    $('#createContactModal #photo').val(null);
+                    $('#createContactModal').modal('show');
+                }
+            }
+        ],
         columns: [
             {data: 'id', searchable: false},
             {data: 'photo', searchable: false, orderable: false},
@@ -80,27 +98,27 @@ $(document).ready(function () {
             data: {id: id},
             dataType: "json",
             success: function (data) {
-                $('.modal-title').text('Edit Contact');
-                $('#id').val(data.id);
-                $('#action').val("edit");
-                $('#first_name').val(data.first_name);
-                $('#last_name').val(data.last_name);
-                $('#email').val(data.email);
-                $('#phone').val(data.phone);
-                $("#phone").mask("+ (999) 999 999 9999");
-                $('#phone_text').text(data.phone_text);
-                $('#photo').val(null);
-                $('#editEmployeeModal').modal('show');
+                $('#editContactModal .modal-title').text('Edit Contact');
+                $('#editContactModal #id').val(data.id);
+                $('#editContactModal #action').val("edit");
+                $('#editContactModal #first_name').val(data.first_name);
+                $('#editContactModal #last_name').val(data.last_name);
+                $('#editContactModal #email').val(data.email);
+                $('#editContactModal #phone').val(data.phone);
+                $("#editContactModal #phone").mask("+ (999) 999 999 9999");
+                $('#editContactModal #phone_text').text(data.phone_text);
+                $('#editContactModal #photo').val(null);
+                $('#editContactModal').modal('show');
             }
         })
     });
 
 
 
-    $('#editEmployeeModalForm').submit(function (e) {
+    $('#editContactModalForm').submit(function (e) {
         e.preventDefault();
         form = new FormData(this);
-        form.append('id',$("#id").val());
+        form.append('id',$("#editContactModalForm #id").val());
         $.ajax({
             url: "contact-update",
             method: "POST",
@@ -115,7 +133,29 @@ $(document).ready(function () {
 
                 if(data.result) {
                     $('#example').DataTable().ajax.reload(null, false);
-                    $('#editEmployeeModal').modal('hide');
+                    $('#editContactModal').modal('hide');
+                }
+            }
+        })
+    });
+
+    $('#createContactModalForm').submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: "contact-create",
+            method: "POST",
+            data: new FormData(this),
+            processData: false,
+            contentType: false,
+            dataType: "json",
+            success: function (data) {
+                if(data.errors) {
+                    alert(JSON.stringify(data.errors));
+                }
+
+                if(data.result) {
+                    $('#example').DataTable().ajax.reload();
+                    $('#createContactModal').modal('hide');
                 }
             }
         })

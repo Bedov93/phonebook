@@ -51,7 +51,7 @@ class Database
         return $query;
     }
 
-    public static function query($sql, $params = [])
+    public static function query($sql, $params = [], $execute = true)
     {
         $stmt = self::getInstance()->dbh->prepare($sql);
         if (!empty($params)) {
@@ -64,8 +64,10 @@ class Database
                 $stmt->bindValue(':' . $key, $val, $type);
             }
         }
-        if(!$stmt->execute()) {
-            $stmt->errorInfo();
+        if($execute) {
+            if(!$stmt->execute()) {
+                //echo $stmt->errorInfo();
+            }
         }
         return $stmt;
     }
@@ -84,7 +86,7 @@ class Database
 
     public static function execute($sql, $params = [])
     {
-        return self::getInstance()->query($sql, $params)->execute();
+        return self::getInstance()->query($sql, $params, $execute = false)->execute();
     }
 
     public static function lastInsertId()

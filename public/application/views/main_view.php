@@ -58,11 +58,50 @@
         </table>
     </div>
 </div>
-<!-- Edit Modal HTML -->
-<div id="editEmployeeModal" class="modal fade">
+<!-- Create Modal HTML -->
+<div id="createContactModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="editEmployeeModalForm">
+            <form id="createContactModalForm">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add Contact</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" class="form-control" required name="first_name" id="first_name">
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" class="form-control" required name="last_name" id="last_name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-control" required name="email" id="email">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="text" class="form-control" required name="phone" id="phone">
+                    </div>
+                    <div class="form-group">
+                        <label>Photo</label>
+                        <input id="photo" type="file" class="form-control" name="photo" onchange="fileValidate(this.value);">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                    <input type="submit" class="btn btn-info" value="Save">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Edit Modal HTML -->
+<div id="editContactModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="editContactModalForm">
                 <div class="modal-header">
                     <h4 class="modal-title">Add Contact</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>

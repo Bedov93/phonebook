@@ -68,6 +68,32 @@ class Controller_Contact extends Controller
 
     function action_create()
     {
+        if ($_SESSION['logged']) {
 
+            $this->model = new Model_Contact();
+
+            preg_match_all('!\d+!', $_POST['phone'], $matches);
+
+            $_POST['phone'] = "+" . preg_replace('/[^0-9]/', '', $_POST['phone']);
+
+
+            if (!$this->model->validate([
+                'first_name',
+                'last_name',
+                'email',
+                'phone'
+            ], $_POST, true)) {
+                echo json_encode(["errors" => $this->model->errors]);
+                return false;
+            }
+
+            if (!$this->model->create($_POST)) {
+                echo json_encode(["errors" => $this->model->errors]);
+                return false;
+            }
+
+            echo json_encode(['result' => true]);
+            return true;
+        }
     }
 }

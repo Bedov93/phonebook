@@ -10,12 +10,12 @@ class Model_Contact extends Model
 
         $rules = [
             'first_name' => [
-                'pattern' => '#^[a-zA-Z0-9]{0,255}$#',
+                'pattern' => '#^[a-zA-Z0-9]{1,255}$#',
                 'message' => trim(preg_replace('/\s\s+/', ' ', 'The login is specified incorrectly 
                 (only Latin letters and numbers from 0 to 255 characters are allowed')),
             ],
             'last_name' => [
-                'pattern' => '#^[a-zA-Z0-9]{0,255}$#',
+                'pattern' => '#^[a-zA-Z0-9]{1,255}$#',
                 'message' => trim(preg_replace('/\s\s+/', ' ', 'The login is specified incorrectly 
                 (only Latin letters and numbers from 0 to 255 characters are allowed')),
             ],
@@ -205,7 +205,7 @@ class Model_Contact extends Model
                     phone = :phone";
 
         if($photo['size']) {
-            //self::deleteImage($contact['id']);
+            self::deleteImage($contact['id']);
             $contact['photo'] = self::uploadImage($photo);
             $updateQuery .= ", photo = :photo";
 
@@ -216,6 +216,25 @@ class Model_Contact extends Model
             $updateQuery."
                 WHERE 
                     id = :id
+        ",$contact);
+    }
+
+    public function create($contact){
+
+        $photo = $_FILES['photo'];
+
+        $columnsQuery = "user_id, first_name, last_name, email, phone";
+        $valuesQuery = ":user_id, :first_name, :last_name, :email, :phone";
+
+        if($photo['size']) {
+            $contact['photo'] = self::uploadImage($photo);
+            $columnsQuery .=", photo";
+            $valuesQuery .=", :photo";
+        }
+
+        $contact['user_id'] = $_SESSION['user_id'];
+
+        return Database::execute("INSERT INTO contacts ({$columnsQuery}) values ({$valuesQuery})
         ",$contact);
     }
 

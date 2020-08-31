@@ -256,3 +256,8 @@ table.table .avatar {
     background: #dddddd;
     padding: 10px;
 }
+
+.dt-buttons {
+    display: flex;
+    justify-content: center;
+}
