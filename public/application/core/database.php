@@ -65,7 +65,7 @@ class Database
             }
         }
         if(!$stmt->execute()) {
-            dd($stmt->errorInfo());
+            $stmt->errorInfo();
         }
         return $stmt;
     }

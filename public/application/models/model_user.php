@@ -94,17 +94,18 @@ class Model_User extends Model
             'login' => $data['login'],
         ];
 
-        $password = Database::query(
-            'SELECT password FROM users WHERE login = :login',
-            $params)->fetch(PDO::FETCH_ASSOC)['password'];
+        $user = Database::query(
+            'SELECT * FROM users WHERE login = :login',
+            $params)->fetch(PDO::FETCH_ASSOC);
 
-        if (!$password || !password_verify($data['password'], $password)) {
+        if (!$user || !password_verify($data['password'], $user['password'])) {
             return false;
         }
 
         session_start();
         $_SESSION['logged'] = true;
-        $_SESSION['login'] = $data['login'];
+        $_SESSION['login'] = $user['login'];
+        $_SESSION['user_id'] = $user['id'];
 
         return true;
     }

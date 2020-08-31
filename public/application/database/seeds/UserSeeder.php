@@ -25,7 +25,7 @@ class UserSeeder extends AbstractSeed
                     'last_name' => $faker->lastName,
                     'email' => $faker->unique()->safeEmail,
                     'phone' => $faker->e164PhoneNumber,
-                    'photo' => $faker->imageUrl(200,300)
+                    'photo' => $faker->image('images',80,80)
                 ];
             }
         }

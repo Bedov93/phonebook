@@ -24,3 +24,5 @@ rmi:
 	@docker-compose -f ${DOCKER_CONFIG} down && docker rmi $(docker images -q)
 phinx:
 	@docker exec -it ${DOCKER_PHP} bash -c "./vendor/bin/phinx $(args)"
+fresh:
+	@make phinx args="rollback -t 0" &&  make phinx args="migrate" && make phinx args="seed:run"
